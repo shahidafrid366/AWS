@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "python.name" . }}
+  labels:
+    {{- include "python.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.pythonMicroservice.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "python.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "python.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: python-microservice
+          image: "{{ .Values.pythonMicroservice.container.image.repository }}:{{ .Values.pythonMicroservice.container.image.tag }}"
+          imagePullPolicy: {{ .Values.pythonMicroservice.container.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.pythonMicroservice.container.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          env:
+            - name: KUBERNETES_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: KUBERNETES_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: KUBERNETES_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: CONTAINER_IMAGE
+              value: "{{ .Values.pythonMicroservice.container.image.repository }}:{{ .Values.pythonMicroservice.container.image.tag }}"
+          {{- with .Values.pythonMicroservice.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- with .Values.pythonMicroservice.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.pythonMicroservice.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.pythonMicroservice.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+

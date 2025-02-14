@@ -1,0 +1,55 @@
+# Provide a custom message
+message: ""
+
+# Remember to set service.type=ClusterIP if you are using an ingress
+ingress:
+  configured: false
+  rewritePath: true
+  pathPrefix: "/"
+  hosts:
+    - host: helloworld
+      serviceName: "{{ include 'hello-kubernetes.name' . }}"
+      servicePort: 80
+    - host: python
+      serviceName: "{{ include 'python.name' . }}"
+      servicePort: 80
+
+service:
+  type: ClusterIP
+  port: 80
+
+deployment:
+  replicaCount: 2
+  container:
+    image:
+      repository: "paulbouwer/hello-kubernetes"
+      tag: "" # uses chart appVersion if not provided
+      pullPolicy: IfNotPresent
+    port: 8080
+
+  # Currently only linux images on amd64 architecture are supported - support for arm64 and windows/amd64 coming ...
+  nodeSelector:
+    kubernetes.io/os: linux
+    kubernetes.io/arch: amd64
+
+  resources: {}
+
+  tolerations: []
+
+  affinity: {}
+
+pythonMicroservice:
+  enabled: true
+  replicaCount: 2
+  container:
+    image:
+      repository: "971422671164.dkr.ecr.us-east-1.amazonaws.com/assignment-ecr"
+      tag: "v1.0.0"
+      pullPolicy: IfNotPresent
+    port: 8000
+  nodeSelector:
+    kubernetes.io/os: linux
+    kubernetes.io/arch: amd64
+  resources: {}
+  tolerations: []
+  affinity: {}

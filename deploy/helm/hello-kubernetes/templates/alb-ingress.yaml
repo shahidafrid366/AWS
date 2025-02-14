@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: alb-ingress
+  namespace: default
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+spec:
+  ingressClassName: alb
+  rules:
+    - host: k8s-default-albingre-667f413e5d-1402516317.us-east-1.elb.amazonaws.com
+      http:
+        paths:
+          - path: /hello
+            pathType: Prefix
+            backend:
+              service:
+                name: hello-kubernetes-hello
+                port:
+                  number: {{ .Values.service.port }}
+          - path: /python
+            pathType: Prefix
+            backend:
+              service:
+                name: hello-kubernetes-python-hello
+                port:
+                  number: 80

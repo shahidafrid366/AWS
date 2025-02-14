@@ -1,0 +1,51 @@
+{
+    "nodegroup": {
+        "nodegroupName": "Assignment_eks_worker_nodes",
+        "nodegroupArn": "arn:aws:eks:us-east-1:971422671164:nodegroup/Assignment-eks-cluster/Assignment_eks_worker_nodes/deca7f05-25ac-578c-5941-67c61480c516",
+        "clusterName": "Assignment-eks-cluster",
+        "version": "1.31",
+        "releaseVersion": "1.31.4-20250203",
+        "createdAt": "2025-02-13T06:41:16.285000+00:00",
+        "modifiedAt": "2025-02-13T10:42:43.592000+00:00",
+        "status": "ACTIVE",
+        "capacityType": "ON_DEMAND",
+        "scalingConfig": {
+            "minSize": 1,
+            "maxSize": 2,
+            "desiredSize": 2
+        },
+        "instanceTypes": [
+            "t2.medium"
+        ],
+        "subnets": [
+            "subnet-0499caf0a5c43c3d2",
+            "subnet-03fe74ecf8a588500",
+            "subnet-0d96d7c04cd0b5771"
+        ],
+        "remoteAccess": {
+            "ec2SshKey": "assignment",
+            "sourceSecurityGroups": [
+                "sg-09cd466836fd24815"
+            ]
+        },
+        "amiType": "AL2023_x86_64_STANDARD",
+        "nodeRole": "arn:aws:iam::971422671164:role/Assignment-eks-worker-role",
+        "labels": {},
+        "resources": {
+            "autoScalingGroups": [
+                {
+                    "name": "eks-Assignment_eks_worker_nodes-deca7f05-25ac-578c-5941-67c61480c516"
+                }
+            ],
+            "remoteAccessSecurityGroup": "sg-08312eb420a346370"
+        },
+        "diskSize": 20,
+        "health": {
+            "issues": []
+        },
+        "updateConfig": {
+            "maxUnavailable": 1
+        },
+        "tags": {}
+    }
+}
